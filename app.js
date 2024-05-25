@@ -14,6 +14,11 @@ const errorHandler = require("./middleware/errorHandler");
 // Middlewares
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send(
+    "<h1>Index route</h1><a href='/api/v1/products'>Go to products route</a>"
+  );
+});
 app.use("/api/v1/products", productsRouter);
 
 app.use(notFound);

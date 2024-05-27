@@ -1,13 +1,25 @@
 const express = require("express");
-
+const Product = require("../models/products");
 const getAllProducts = async (req, res) => {
-  //   throw new Error("error");
-  return res.status(200).json({ msg: "All products" });
+  const { featured, name, company } = req.query;
+  const queryObj = {};
+  if (featured) {
+    queryObj.featured = featured === "true" ? true : false;
+  }
+  if (company) {
+    queryObj.company = company;
+  }
+  if (name) {
+    queryObj.name = { $regex: name, $options: "i" };
+  }
+  const products = await Product.find(queryObj);
+  console.log(queryObj);
+  res.status(200).json({ rowCount: products.length, products });
 };
 
 const getAllStaticProducts = async (req, res) => {
-  //   throw new Error("error");
-  return res.status(200).json({ msg: "All static products" });
+  const products = await Product.find({ company: "liddy" });
+  res.status(200).json({ rowCount: products.length, products });
 };
 
 module.exports = {
